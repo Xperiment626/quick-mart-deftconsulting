@@ -1,0 +1,3 @@
+Milk: 5, $3.75, $3.50, tax-exempt
+Red Bull: 10, $4.30, $4.00, taxable
+Flour: 1, $3.10, $2.75, tax-exempt
