@@ -219,6 +219,7 @@ while(True):
                             else:
                                 print("No items for CheckOut")
                         if option == 7:
+                            inventoryCopy = copy.deepcopy(inventory)
                             break
                     except ValueError:
                         print("Invalid input")
