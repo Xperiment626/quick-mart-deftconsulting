@@ -20,7 +20,7 @@ Jerry has hired you for a quick solution to his problem. For the day of the Gran
 
 # Instructions
 
-> I was told to not use any external libraries. However I used the build in libraries/packages from PYTHON 3.x just for write files and work with dates.
+> I was told to not use any external libraries. However, I used the built in libraries/packages from PYTHON 3.x just to write files and work with dates.
 
 </br>
 </br>
@@ -32,25 +32,26 @@ Jerry has hired you for a quick solution to his problem. For the day of the Gran
 # Brief explanation and Assumptions
 
 > I wrote the program with Python 3.x below this document you will find the usage of the program.
-### The first assumption I had made is that if you need a quick solution for your problem then a good start is to write a console app. If the clint want a GUI I will make it
 
-### Continuing with the app, for the customer membership, I made a choosable option for it, you wil find at the very start of the app
+### The first assumption I had made is that if you need a quick solution for your problem then a good start is to write a console app. If the client want a GUI I will make it
 
-### As you will evaluating my solution and abilities in terms of Object Oriented Desing I created 3 classes (Cart, Customer and Item) and the 'main' file (Quick_mart)
+### Continuing with the app, for the customer membership, I made a choosable option for it, you will find it at the very start of the app
+
+### As you will evaluating my solution and abilities in terms of Object Oriented Design I created 3 classes (Cart, Customer and Item) and the 'main' file (Quick_mart)
 
 ### I know that the commons in OOP is to make getters and setters but I just worked with getters and other kind of methods mainly
 
-### For the functionality of adding an item to cart I assumed that first you want to choose your item from the inventary and then input the quantity of product you want. After that I make a copy from the original inventory in order to ***pre-update*** the inventory so the person using the app will not buy anything out of stock. The real inventory is updated when the checkout is finally confirmed
+### For the functionality of adding an item to cart I assumed that first you want to choose your item from the inventary and then input the quantity of product you want. After that, I make a copy from the original inventory in order to ***pre-update*** the inventory so the person using the app will not buy anything out of stock. The real inventory is updated when the checkout is finally confirmed
 
-### For the functionality of removing an item from the cart, I had 2 ideas, after ask about it I made that function in the following way: firts the cart is shown to you, then you need to choose the number(#) of item you want to removed, finally it will decrease 1 by 1
+### For the functionality of removing an item from the cart, I had 2 ideas, after ask about it I made that function in the following way: firts the cart is shown to you, then you need to choose the number(#) of item you want to removed, finally it will decrease 1 by 1. If it reachs 0 it will be removed from the cart
 
-### It was needed to have an empty cart option so for this I just the methods build in for List in python, so I just errase all the List of items from cart
+### It was needed to have an empty cart option so for this I just the built in methods for List in python, so I just erase all the List of items from cart
 
-### For the functionality of wiev cart I just print the List of items making some calculations for the total that was required in the document
+### For the view cart functionality, I just print the Item List and do some calculations for the total that is required in the document, and that prints as well
 
-### For the functionality of checkout and print receipt I just the 'os' package from python to make CRUD operations with files. The document says that every transaction will be in cash, so the first thing to have a good transaction is to check if the cash if grater than the bill, if it is the function will start to make some calculations (subtotal, taxes, total, items sold, etc) then it will return an array/list of data necessary for the update of the inventory, even with the check of the cash value I still ask to the seller if he/she is sure to continue with the transaction, if the answer is 'yes' the app will write the receipt on a file in the 'transaction' folder
+### For cheackout and receipt printing functionality, I only use the python 'os' package to perform CRUD operations with files. The document says that all transactions will be in cash, so the first thing to have a good transaction is to check if the cash is greater than the invoice, if so, the function will start to perform some calculations (subtotal, taxes, total, items sold etc) will then return an array/list of data needed for inventory update, even with cash value verification, I still ask the seller/customer if they are sure to proceed with the transaction, if the response is 'yes', the app will write the receipt to a file in the 'transaction' folder
 
-### Finally, we have the 'cancel transaction' functionality not really a big deal just start from the beginning
+### Finally, we have the 'cancel transaction' functionality not really a big deal, just start from the beginning
 
 ---
 
