@@ -65,7 +65,6 @@ def showInventory(inv):
 
 # Using the item in order to pre-updated the inventory then people will not buy anything out of stock
 def preUpdateInventory(item, operation, inv):
-    print(item.name)
     if operation == "add":
         for k in inv:
             aux = 0
@@ -77,8 +76,6 @@ def preUpdateInventory(item, operation, inv):
         for k in inv:
             aux = 0
             if inv[k]["name"] == item.name:
-                print(inv[k]["name"], item.name)
-                print(inv[k]["quantity"], item.quantity)
                 aux = int(inv[k]["quantity"])
                 aux += 1
                 inv[k]["quantity"] = str(aux)
