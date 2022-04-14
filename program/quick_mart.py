@@ -170,7 +170,6 @@ while(True):
                     if option == 2:
                         showInventory(inventoryCopy)
                         posOption = int(input("\nChoose the 'Pos' of the item you want: "))
-                        print(len(inventoryCopy))
                         if(posOption < 0 or posOption >= len(inventoryCopy)):
                             print("\nInvalid Value")
                         else:
@@ -203,24 +202,23 @@ while(True):
                         if len(cart.items) > 0:
                             validCash = cart.validateCash(customer.getMembership())
                             print(f"TOTAL BILL: {validCash}")
-                            cash = float(input("Cash $: "))
-                            if cash < validCash:
-                                print("Invalid value it must be greater than the bill")
-                            else:
-                                cheackoutData = cart.checkOut(cash, customer.getMembership())
-                                print(cheackoutData[-3], print(cheackoutData[-2]))
-                                print("\n\t\tConfirm Checkout\n1) No\n2) Yes")
-                                confirmation = bool(int(input("Option: ")) - 1)
-                                inventoryCopy = copy.deepcopy(inventory) if confirmation else inventoryCopy
-                                updateInventory(confirmation, cheackoutData)
-                                break
+                            try:
+                                cash = float(input("Cash $: "))
+                                if cash < validCash:
+                                    print("Invalid value it must be greater than the bill")
+                                else:
+                                    cheackoutData = cart.checkOut(cash, customer.getMembership())
+                                    print(cheackoutData[-3], print(cheackoutData[-2]))
+                                    print("\n\t\tConfirm Checkout\n1) No\n2) Yes")
+                                    confirmation = bool(int(input("Option: ")) - 1)
+                                    inventoryCopy = copy.deepcopy(inventory) if confirmation else inventoryCopy
+                                    updateInventory(confirmation, cheackoutData)
+                                    break
+                            except ValueError:
+                                print("Invalid input")
                         else:
                             print("No items for CheckOut")
                     if option == 7:
                         break
     except ValueError:
         print("Invalid input")
-            
-            
-            
-        
