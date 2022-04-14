@@ -4,9 +4,9 @@ import os, os.path
 import copy
 
 # importing the classes from the files in the same directory
-import Customer as ctm
-import Cart as crt
-import Item as it
+import customer as ctm
+import cart as crt
+import item as it
 
 def readFileInventory(path):
     # Stores data from inventory.txt file
