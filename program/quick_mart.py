@@ -163,62 +163,64 @@ while(True):
                 membership = "rewards" if membershipType == 1 else "regular"
                 customer = ctm.Customer(membership)
                 while(True):
-                    showOptions()
-                    option = int(input("\nOption: "))
-                    if option == 1:
-                        showInventory(inventoryCopy)
-                    if option == 2:
-                        showInventory(inventoryCopy)
-                        posOption = int(input("\nChoose the 'Pos' of the item you want: "))
-                        if(posOption < 0 or posOption >= len(inventoryCopy)):
-                            print("\nInvalid Value")
-                        else:
-                            itemQuantity = int(input("\nQuantity: "))
-                            if(itemQuantity <= 0 or itemQuantity > int(inventoryCopy[posOption]["quantity"])):
+                    try:
+                        showOptions()
+                        option = int(input("\nOption: "))
+                        if option == 1:
+                            showInventory(inventoryCopy)
+                        if option == 2:
+                            showInventory(inventoryCopy)
+                            posOption = int(input("\nChoose the 'Pos' of the item you want: "))
+                            if(posOption < 0 or posOption >= len(inventoryCopy)):
+                                print("\nInvalid Value")
+                            else:
+                                itemQuantity = int(input("\nQuantity: "))
+                                if(itemQuantity <= 0 or itemQuantity > int(inventoryCopy[posOption]["quantity"])):
+                                    print("\nInvalid value")
+                                else:
+                                    item = it.Item(inventoryCopy[posOption]["name"], itemQuantity, float(inventoryCopy[posOption]["regularPrice"]), float(inventoryCopy[posOption]["memberPrice"]), inventoryCopy[posOption]["taxStatus"])
+                                    cart.addItem(item.name, item)
+                                    preUpdateInventory(item, operation = "add", inv = inventoryCopy)
+                        if option == 3:
+                            cart.show(customer.getMembership())
+                            itemNumOption = int(input("\nChoose item #: "))
+                            if itemNumOption < 1 or itemNumOption > cart.size():
                                 print("\nInvalid value")
                             else:
-                                item = it.Item(inventoryCopy[posOption]["name"], itemQuantity, float(inventoryCopy[posOption]["regularPrice"]), float(inventoryCopy[posOption]["memberPrice"]), inventoryCopy[posOption]["taxStatus"])
-                                cart.addItem(item.name, item)
-                                preUpdateInventory(item, operation = "add", inv = inventoryCopy)
-                    if option == 3:
-                        cart.show(customer.getMembership())
-                        itemNumOption = int(input("\nChoose item #: "))
-                        if itemNumOption < 1 or itemNumOption > cart.size():
-                            print("\nInvalid value")
-                        else:
-                            cart.removeItem(cart.items[itemNumOption - 1])
-                            preUpdateInventory(item, operation = "remove", inv = inventoryCopy)
-                        
-                    if option == 4:
-                        cart.emptyCart()
-                        inventoryCopy = None
-                        inventoryCopy = copy.deepcopy(inventory)
-                        print("Items deleted succesfully")
-                        
-                    if option == 5:
-                        cart.show(customer.getMembership())
-                        
-                    if option == 6:
-                        if len(cart.items) > 0:
-                            validCash = cart.validateCash(customer.getMembership())
-                            print(f"TOTAL BILL: {validCash}")
-                            try:
-                                cash = float(input("Cash $: "))
-                                if cash < validCash:
-                                    print("Invalid value it must be greater than the bill")
-                                else:
-                                    cheackoutData = cart.checkOut(cash, customer.getMembership())
-                                    print(cheackoutData[-3], print(cheackoutData[-2]))
-                                    print("\n\t\tConfirm Checkout\n1) No\n2) Yes")
-                                    confirmation = bool(int(input("Option: ")) - 1)
-                                    inventoryCopy = copy.deepcopy(inventory) if confirmation else inventoryCopy
-                                    updateInventory(confirmation, cheackoutData)
-                                    break
-                            except ValueError:
-                                print("Invalid input")
-                        else:
-                            print("No items for CheckOut")
-                    if option == 7:
-                        break
+                                cart.removeItem(cart.items[itemNumOption - 1])
+                                preUpdateInventory(item, operation = "remove", inv = inventoryCopy)
+                            
+                        if option == 4:
+                            cart.emptyCart()
+                            inventoryCopy = None
+                            inventoryCopy = copy.deepcopy(inventory)
+                            print("Items deleted succesfully")
+                            
+                        if option == 5:
+                            cart.show(customer.getMembership())
+                            
+                        if option == 6:
+                            if len(cart.items) > 0:
+                                validCash = cart.validateCash(customer.getMembership())
+                                print(f"TOTAL BILL: {validCash}")
+                                try:
+                                    cash = float(input("Cash $: "))
+                                    if cash < validCash:
+                                        print("Invalid value it must be greater than the bill")
+                                    else:
+                                        cheackoutData = cart.checkOut(cash, customer.getMembership())
+                                        print("\n\t\tConfirm Checkout\n1) No\n2) Yes")
+                                        confirmation = bool(int(input("Option: ")) - 1)
+                                        inventoryCopy = copy.deepcopy(inventory) if confirmation else inventoryCopy
+                                        updateInventory(confirmation, cheackoutData)
+                                        break
+                                except ValueError:
+                                    print("Invalid input")
+                            else:
+                                print("No items for CheckOut")
+                        if option == 7:
+                            break
+                    except ValueError:
+                        print("Invalid input")
     except ValueError:
         print("Invalid input")
