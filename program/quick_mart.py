@@ -157,7 +157,7 @@ while(True):
         if(firstOption == 1):
             cart = crt.Cart([])
             membershipType = int(input("\nCustomer membership\n1) Rewards member\n2) Regular member\nOption: "))
-            if membershipType < 0 or membershipType > 2:
+            if membershipType < 1 or membershipType > 2:
                 print("Invalid value")
             else:
                 membership = "rewards" if membershipType == 1 else "regular"
@@ -170,7 +170,8 @@ while(True):
                     if option == 2:
                         showInventory(inventoryCopy)
                         posOption = int(input("\nChoose the 'Pos' of the item you want: "))
-                        if(posOption < 0 or posOption > len(inventoryCopy)):
+                        print(len(inventoryCopy))
+                        if(posOption < 0 or posOption >= len(inventoryCopy)):
                             print("\nInvalid Value")
                         else:
                             itemQuantity = int(input("\nQuantity: "))
