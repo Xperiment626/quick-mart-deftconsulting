@@ -218,6 +218,7 @@ while(True):
                                             inventoryCopy = copy.deepcopy(inventory)
                                         else:
                                             updateInventory(confirmation, cheackoutData)
+                                            break
                                 except ValueError:
                                     print("Invalid input")
                             else:
