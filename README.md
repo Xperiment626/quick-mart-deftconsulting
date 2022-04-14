@@ -65,10 +65,16 @@ Jerry has hired you for a quick solution to his problem. For the day of the Gran
 
 > Make sure that 'transaction' folder is created in the 'program' root folder
 
-    python quick_mart.py
+    $ python quick_mart.py
 
 ### or
 
-    python3 quick_mart.py
+    $ python3 quick_mart.py
 
 ### *If you have any questions about the program feel free to ask me*
+
+# Contact
+
+* Personal e-mail: `inaki.manosalvas@gmail.com`
+* Student e-mail: `inaki.manosalvas@udla.edu.ec`
+* WhatsApp: [Direct msg to my chat from WhatsApp API](https://api.whatsapp.com/send/?phone=593989180423&text=Buen%20d%C3%ADa%20I%C3%B1aki,%20soy%20...&app_absent=0)
