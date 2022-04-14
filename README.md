@@ -15,12 +15,18 @@ Jerry has hired you for a quick solution to his problem. For the day of the Gran
 7. Cancel transaction
   
 ### *Inventory is passed into the app in a text file, with item information on each line. The receipt is printed as a .txt file, with the transaction number and date included in the file name. Inventory is updated after checkout to avoid customers buying items that are out of stock*
+
 ---
+
 # Instructions
+
 > I was told to not use any external libraries. However I used the build in libraries/packages from PYTHON 3.x just for write files and work with dates.
+
 </br>
 </br>
+
 > I uploaded the code to GitHub with no executable files. You will find it in the following link: [Quick Mart](https://github.com/Xperiment626/quick-mart-deftconsulting)
+
 ---
 
 # Brief explanation and Assumptions
