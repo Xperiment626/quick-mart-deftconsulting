@@ -149,78 +149,103 @@ print("\tWELCOME TO JERRY'S QUICK MART by Iñaki Manosalvas!")
 
 # The app will run until the client decides to exit the app
 while(True):
+    # New transaction or exit system
     showFirstOptions()
     try:
         firstOption = int(input("\nOption: "))
+        # exit program if is 2
         if(firstOption == 2):
             break
+        # starting new transaction
         if(firstOption == 1):
+            # Initializing Cart object
             cart = crt.Cart([])
             membershipType = int(input("\nCustomer membership\n1) Rewards member\n2) Regular member\nOption: "))
+            # Validating that the input is contained in the options
             if membershipType < 1 or membershipType > 2:
                 print("Invalid value")
             else:
+                # setting the membership type
                 membership = "rewards" if membershipType == 1 else "regular"
+                # Initializing Customer object
                 customer = ctm.Customer(membership)
                 while(True):
+                    # Validating that the input is correct
                     try:
                         showOptions()
                         option = int(input("\nOption: "))
+                        
+                        # Show current inventory
                         if option == 1:
                             showInventory(inventoryCopy)
+                        
+                        # Add items to cart
                         if option == 2:
                             showInventory(inventoryCopy)
                             posOption = int(input("\nChoose the 'Pos' of the item you want: "))
+                            # Validating that the input is contained in the options
                             if(posOption < 0 or posOption >= len(inventoryCopy)):
                                 print("\nInvalid Value")
                             else:
                                 itemQuantity = int(input("\nQuantity: "))
+                                # Validating that the input is contained in the options
                                 if(itemQuantity <= 0 or itemQuantity > int(inventoryCopy[posOption]["quantity"])):
                                     print("\nInvalid value")
                                 else:
                                     item = it.Item(inventoryCopy[posOption]["name"], itemQuantity, float(inventoryCopy[posOption]["regularPrice"]), float(inventoryCopy[posOption]["memberPrice"]), inventoryCopy[posOption]["taxStatus"])
                                     cart.addItem(item.name, item)
                                     preUpdateInventory(item, operation = "add", inv = inventoryCopy)
+                        
+                        # Remove individual items from cart
                         if option == 3:
                             cart.show(customer.getMembership())
                             itemNumOption = int(input("\nChoose item #: "))
+                            # Validating that the input is contained in the options
                             if itemNumOption < 1 or itemNumOption > cart.size():
                                 print("\nInvalid value")
                             else:
                                 preUpdateInventory(cart.items[itemNumOption - 1], operation = "remove", inv = inventoryCopy)
                                 cart.removeItem(cart.items[itemNumOption - 1])
-                            
+                        
+                        # Empty cart  
                         if option == 4:
                             cart.emptyCart()
                             inventoryCopy = None
                             inventoryCopy = copy.deepcopy(inventory)
                             print("Items deleted succesfully")
-                            
+                        
+                        # Show current cart
                         if option == 5:
                             cart.show(customer.getMembership())
-                            
+                        
+                        # Start checkout  
                         if option == 6:
                             if len(cart.items) > 0:
                                 validCash = cart.validateCash(customer.getMembership())
                                 print(f"TOTAL BILL: {validCash}")
                                 try:
                                     cash = float(input("Cash $: "))
+                                    # Validating that the cash is greater than the invoice/bill
                                     if cash < validCash:
                                         print("Invalid value it must be greater than the bill")
                                     else:
                                         cheackoutData = cart.checkOut(cash, customer.getMembership())
                                         print("\n\t\tConfirm Checkout\n1) No\n2) Yes")
                                         confirmation = bool(int(input("Option: ")) - 1)
-                                        if not confirmation:
-                                            inventoryCopy = copy.deepcopy(inventory)
-                                        else:
+                                        # Validating that the input is contained in the options
+                                        if confirmation == 1:
                                             updateInventory(confirmation, cheackoutData)
                                             break
+                                        if confirmation == 0:
+                                            inventoryCopy = copy.deepcopy(inventory)
                                 except ValueError:
                                     print("Invalid input")
                             else:
                                 print("No items for CheckOut")
+                        
+                        # Cancel transaction
                         if option == 7:
+                            # If the transacction is canceled recreated the aux inventory for next transaction
                             inventoryCopy = copy.deepcopy(inventory)
                             break
                     except ValueError:
