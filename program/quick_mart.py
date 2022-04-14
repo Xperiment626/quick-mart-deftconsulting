@@ -65,7 +65,7 @@ def showInventory(inv):
 
 # Using the item in order to pre-updated the inventory then people will not buy anything out of stock
 def preUpdateInventory(item, operation, inv):
-    
+    print(item.name)
     if operation == "add":
         for k in inv:
             aux = 0
@@ -77,6 +77,8 @@ def preUpdateInventory(item, operation, inv):
         for k in inv:
             aux = 0
             if inv[k]["name"] == item.name:
+                print(inv[k]["name"], item.name)
+                print(inv[k]["quantity"], item.quantity)
                 aux = int(inv[k]["quantity"])
                 aux += 1
                 inv[k]["quantity"] = str(aux)
@@ -126,6 +128,7 @@ def updateInventory(confirmation, data, inv = inventory):
     # Creating and writing the new transaction file
     writeTransaction(path, data)
     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    inventory = readFileInventory("inventory.txt")
 
 # this method is execute when the checkout is confirmed
 def writeTransaction(path, data):
@@ -187,8 +190,8 @@ while(True):
                             if itemNumOption < 1 or itemNumOption > cart.size():
                                 print("\nInvalid value")
                             else:
+                                preUpdateInventory(cart.items[itemNumOption - 1], operation = "remove", inv = inventoryCopy)
                                 cart.removeItem(cart.items[itemNumOption - 1])
-                                preUpdateInventory(item, operation = "remove", inv = inventoryCopy)
                             
                         if option == 4:
                             cart.emptyCart()
@@ -211,9 +214,10 @@ while(True):
                                         cheackoutData = cart.checkOut(cash, customer.getMembership())
                                         print("\n\t\tConfirm Checkout\n1) No\n2) Yes")
                                         confirmation = bool(int(input("Option: ")) - 1)
-                                        inventoryCopy = copy.deepcopy(inventory) if confirmation else inventoryCopy
-                                        updateInventory(confirmation, cheackoutData)
-                                        break
+                                        if not confirmation:
+                                            inventoryCopy = copy.deepcopy(inventory)
+                                        else:
+                                            updateInventory(confirmation, cheackoutData)
                                 except ValueError:
                                     print("Invalid input")
                             else:
