@@ -29,8 +29,13 @@ class Cart:
             self.items[index].quantity += item.quantity
             
     def removeItem(self, item):
-        if item in self.items:
-            self.items.remove(item)
+        names = self.getItemNames()
+        if item.name in names:
+            item.quantity -= 1
+            if item.quantity == 0:
+                self.items.remove(item)
+                return print("\nItem removed from cart")
+            print("\nItem quantity decreased successfully")
         else:
             return print("Not in cart")
     

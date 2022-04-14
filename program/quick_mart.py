@@ -3,9 +3,9 @@ from datetime import date
 import os, os.path
 
 # importing the classes from the files in the same directory
-import customer as ctm
-import cart as crt
-import item as it
+import Customer as ctm
+import Cart as crt
+import Item as it
 
 def readFileInventory(path):
     # Stores data from inventory.txt file
@@ -50,10 +50,11 @@ def readFileInventory(path):
 
 # stores the inventory data
 inventory = readFileInventory("inventory.txt")
+inventoryCopy = inventory.copy()
 
 # show the current items and data from inventory var defined before.
 # The method has predefined the inventory var  in the params
-def showInventory(inv = inventory):
+def showInventory(inv = inventoryCopy):
     # Predefine how the data will be shown in console
     print("\n\t\t\tCURRENT INVENTORY\n")
     print ("{:<8} {:<15} {:<15} {:<15} {:<15} {:<15}".format("Pos",'Name','Quantity','Regular Price','Member Price', 'Tax Status'))
@@ -61,6 +62,16 @@ def showInventory(inv = inventory):
     # iterate the inventory in order to populate the table of items
     for k, v in inv.items():
         print ("{:<8} {:<15} {:<15} {:<15} {:<15} {:<15}".format(k ,v["name"], v["quantity"], v["regularPrice"], v["memberPrice"], v["taxStatus"]))
+
+# Using the item in order to pre-updated the inventory then people will not buy anything out of stock
+def preUpdateInventory(item, inv = inventoryCopy):
+    
+    for k in inv:
+        aux = 0
+        if inv[k]["name"] == item.name:
+            aux = int(inv[k]["quantity"])
+            aux -= item.quantity
+            inv[k]["quantity"] = str(aux)
 
 # this method is execute when the checkout is confirmed
 def updateInventory(confirmation, data, inv = inventory):
@@ -151,15 +162,16 @@ while(True):
                     if option == 2:
                         showInventory()
                         posOption = int(input("\nChoose the 'Pos' of the item you want: "))
-                        if(posOption < 0 or posOption > len(inventory)):
+                        if(posOption < 0 or posOption > len(inventoryCopy)):
                             print("\nInvalid Value")
                         else:
                             itemQuantity = int(input("\nQuantity: "))
-                            if(itemQuantity <= 0 or itemQuantity > int(inventory[posOption]["quantity"])):
+                            if(itemQuantity <= 0 or itemQuantity > int(inventoryCopy[posOption]["quantity"])):
                                 print("\nInvalid value")
                             else:
-                                item = it.Item(inventory[posOption]["name"], itemQuantity, float(inventory[posOption]["regularPrice"]), float(inventory[posOption]["memberPrice"]), inventory[posOption]["taxStatus"])
+                                item = it.Item(inventoryCopy[posOption]["name"], itemQuantity, float(inventoryCopy[posOption]["regularPrice"]), float(inventoryCopy[posOption]["memberPrice"]), inventoryCopy[posOption]["taxStatus"])
                                 cart.addItem(item.name, item)
+                                preUpdateInventory(item)
                     if option == 3:
                         cart.show(customer.getMembership())
                         itemNumOption = int(input("\nChoose item #: "))
@@ -167,7 +179,6 @@ while(True):
                             print("\nInvalid value")
                         else:
                             cart.removeItem(cart.items[itemNumOption - 1])
-                            print("\nItem removed succesfully")
                         
                     if option == 4:
                         cart.emptyCart()
