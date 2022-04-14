@@ -18,8 +18,8 @@ class Cart:
         for i in range(len(self.items)):
             names.append(self.items[i].name)
         return names
-        
-    #TODO: PRE UPDATED THE INVENTORY WHEN AN ITEM IS ADDED
+    
+    
     def addItem(self, name, item):
         names = self.getItemNames()
         if name not in names:
