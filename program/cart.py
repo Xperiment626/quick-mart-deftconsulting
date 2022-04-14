@@ -8,9 +8,9 @@ class Cart:
     def show(self, membership):
         counter = 0
         print("\n\t\tCurrent CART\n")
-        print ("{:<8} {:<15} {:<15} {:<15}".format("Item #",'Name','Quantity','Price'))
+        print ("{:<8} {:<15} {:<15} {:<15} {:<15}".format("Item #",'Name','Quantity', 'Unit Price','Total'))
         for item in self.items:
-            print ("{:<8} {:<15} {:<15} {:<15}".format(counter + 1, item.name, item.quantity, item.getPrice(membership) * item.quantity))
+            print ("{:<8} {:<15} {:<15} ${:<15} ${:<15}".format(counter + 1, item.name, item.quantity, round(item.getPrice(membership), 2), round(item.getPrice(membership) * item.quantity, 2)))
             counter += 1
         
     def getItemNames(self):
@@ -19,6 +19,7 @@ class Cart:
             names.append(self.items[i].name)
         return names
         
+    #TODO: PRE UPDATED THE INVENTORY WHEN AN ITEM IS ADDED
     def addItem(self, name, item):
         names = self.getItemNames()
         if name not in names:
@@ -36,6 +37,18 @@ class Cart:
     def emptyCart(self):
         self.items.clear()
         
+    def validateCash(self, membership):
+        total = 0
+        subtotal = 0
+        tax = 0
+        for item in self.items:
+            subtotal += item.getPrice(membership) * item.quantity
+            if item.taxStatus.lower() == "taxable":
+                tax += (item.getPrice(membership) * item.quantity) * 0.065
+            
+        total = subtotal + tax
+        return total
+    
     def checkOut(self, cash, membership):
         total = 0
         subtotal = 0
@@ -61,7 +74,7 @@ class Cart:
         headers = "{:<10} {:<15} {:<15} {:<15}".format("ITEM",'QUANTITY','UNIT PRICE','TOTAL')
         itm = "{:<10} {:<15} {:<15} {:<15}"
         showItems = []
-        data = "***********************************\nTOTAL NUMBER OF ITEMS SOLD: {}\nSUB-TOTAL: ${}\nTAX (6.5%): ${}\nTOTAL: ${}\nCASH: ${}\nCHANGE: ${}\n***********************************\nYOU SAVED: ${}!".format(itemsSold, round(subtotal), round(tax), round(total), round(cash), round(change, 2), round(change, 2))
+        data = "***********************************\nTOTAL NUMBER OF ITEMS SOLD: {}\nSUB-TOTAL: ${}\nTAX (6.5%): ${}\nTOTAL: ${}\nCASH: ${}\nCHANGE: ${}\n***********************************\nYOU SAVED: ${}!".format(itemsSold, round(subtotal, 2), round(tax, 2), round(total, 2), round(cash, 2), round(change, 2), round(change, 2))
         
         print (headers)
         

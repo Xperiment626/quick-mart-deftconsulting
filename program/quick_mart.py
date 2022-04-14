@@ -1,26 +1,42 @@
+# imports to work with dates and files, to adhere to the requirements requested in the document 
 from datetime import date
 import os, os.path
+
+# importing the classes from the files in the same directory
 import customer as ctm
 import cart as crt
 import item as it
 
 def readFileInventory(path):
+    # Stores data from inventory.txt file
     inventoryTxt = ""
 
+    # Open a file al ready created (inventory.txt).
     with open(path, "r", encoding = "utf-8") as f:
+        
         inventoryTxt = f.read()
         
+        # Stores every line of the file with the items data
         inventoryItems = inventoryTxt.splitlines()
+        # Aux var to split by ":" symbol, separate the items names from the item's data
         auxItem = [item.split(":") for item in inventoryItems]
+        # Here it takes the rest of the data, split by "," symbol 
         auxProps = [item[1].split(",") for item in auxItem]
+        # Stores the items names
         itemNames = [item.split(":")[0] for item in inventoryItems]
+        # Stores the items quantity
         itemQuantity = [prop[0].lstrip().rstrip() for prop in auxProps]
+        # Stores the items regular price
         itemRegularPrice = [prop[1].lstrip().rstrip().replace('$','') for prop in auxProps]
+        # Stores the items member price
         itemMemberPrice = [prop[2].lstrip().rstrip().replace('$','') for prop in auxProps]
+        # Stores the items tax status
         itemTaxStatus = [prop[3].lstrip().rstrip().lower() for prop in auxProps]
 
+    # empty inventory object/dict 
     inventory = {}
 
+    # build the object/dict with the data from the inventory.txt file
     for i in range(len(itemNames)):
         inventory[i] = {
                 "name": itemNames[i],
@@ -32,17 +48,23 @@ def readFileInventory(path):
         
     return inventory
 
+# stores the inventory data
 inventory = readFileInventory("inventory.txt")
 
+# show the current items and data from inventory var defined before.
+# The method has predefined the inventory var  in the params
 def showInventory(inv = inventory):
+    # Predefine how the data will be shown in console
     print("\n\t\t\tCURRENT INVENTORY\n")
     print ("{:<8} {:<15} {:<15} {:<15} {:<15} {:<15}".format("Pos",'Name','Quantity','Regular Price','Member Price', 'Tax Status'))
 
+    # iterate the inventory in order to populate the table of items
     for k, v in inv.items():
         print ("{:<8} {:<15} {:<15} {:<15} {:<15} {:<15}".format(k ,v["name"], v["quantity"], v["regularPrice"], v["memberPrice"], v["taxStatus"]))
 
+# this method is execute when the checkout is confirmed
 def updateInventory(confirmation, data, inv = inventory):
-    
+    # date formatting
     today = date.today()
     textualDate = today.strftime("%B %d, %Y")
     numericDate = today.strftime("%m%d%Y")
@@ -57,6 +79,8 @@ def updateInventory(confirmation, data, inv = inventory):
     names = data[-4]
     quantities = data[-3]
     
+    # Updating inventory obj/dict
+    
     for k in inv:
         aux = 0
         for i in range(len(names)):
@@ -64,7 +88,8 @@ def updateInventory(confirmation, data, inv = inventory):
                 aux = int(inv[k]["quantity"])
                 aux -= quantities[i]
                 inv[k]["quantity"] = str(aux)
-        
+    
+    # Rewriting the inventory.txt file with the new data update
     try:
         os.remove('./inventory.txt')
         with open('./inventory.txt', 'w') as f:
@@ -77,12 +102,15 @@ def updateInventory(confirmation, data, inv = inventory):
                 f.write("{}: {}, ${}, ${}, {}\n".format(inv[k]["name"], inv[k]["quantity"], inv[k]["regularPrice"], inv[k]["memberPrice"], inv[k]["taxStatus"]))
             f.close()
     
-
+    # Setting the new path for the receipt and setting the name of the new transaction file 
     path = f"./transactions/transaction_{str(uniqueCode).zfill(6)}_{numericDate}.txt"
+    # Creating and writing the new transaction file
     writeTransaction(path, data)
     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 
+# this method is execute when the checkout is confirmed
 def writeTransaction(path, data):
+    # Writing up everything in the specified path with the transaction data
     with open(path, 'w') as f:
         f.write(f"\t\tCHECKOUT\n{data[-2]}\nTRANSACTION: {str(data[-1]).zfill(6)}\n")
         f.write(data[0] + "\n")
@@ -91,68 +119,82 @@ def writeTransaction(path, data):
         f.write(data[2])
         f.close()
 
+# Aux methods to print options in the console app
 def showFirstOptions():
     print("\n1) New transaction\n2) Exit\n")
 
 def showOptions():
-    print("\n1) Show Inventory\n2) Add item to cart\n3) Remove item from cart\n4) Empty Cart\n5) View Cart\n6) Checkout\n7) Cancel\n")
+    print("\n1) Show Inventory\n2) Add item to cart\n3) Remove item from cart\n4) Empty Cart\n5) View Cart\n6) Checkout\n7) Cancel Transaction\n")
 
 print("\tWELCOME TO JERRY'S QUICK MART by Iñaki Manosalvas!")
 
+# The app will run until the client decides to exit the app
 while(True):
     showFirstOptions()
-    opf = int(input("\nOption: "))
-    if(opf == 2):
-        break
-    cart = crt.Cart([])
-    answer = int(input("\nCustomer membership\n1) Rewards member\n2) Regular member\nOption: "))
-    membership = "rewards" if answer == 1 else "regular"
-    customer = ctm.Customer(membership)
-    while(True):
-        showOptions()
-        op = int(input("\nOption: "))
-        if op == 1:
-            showInventory()
-        if op == 2:
-            showInventory()
-            op1 = int(input("\nChoose the 'Pos' of the item you want: "))
-            if(op1 < 0 or op1 > len(inventory)):
-                print("\nInvalid Value")
-            else:
-                q = int(input("\nQuantity: "))
-                if(q <= 0 or q > int(inventory[op1]["quantity"])):
-                    print("\nInvalid value")
-                else:
-                    item = it.Item(inventory[op1]["name"], q, float(inventory[op1]["regularPrice"]), float(inventory[op1]["memberPrice"]), inventory[op1]["taxStatus"])
-                    cart.addItem(item.name, item)
-        if op == 3:
-            cart.show(customer.getMembership())
-            opr1 = int(input("\nChoose item #: "))
-            if opr1 < 1 or opr1 > cart.size():
-                print("\nInvalid value")
-            else:
-                cart.removeItem(cart.items[opr1 - 1])
-                print("\nItem removed succesfully")
-            
-        if op == 4:
-            cart.emptyCart()
-            print("Items deleted succesfully")
-            
-        if op == 5:
-            cart.show(customer.getMembership())
-            
-        if op == 6:
-            if len(cart.items) > 0:
-                cash = float(input("Cash $: "))
-                cheackoutData = cart.checkOut(cash, customer.getMembership())
-                print("\n\t\tConfirm Checkout\n1) No\n2) Yes")
-                confirmation = bool(int(input("Option: ")) - 1)
-                updateInventory(confirmation, cheackoutData)
-                break
-            else:
-                print("No items for CheckOut")
-        if op == 7:
+    try:
+        firstOption = int(input("\nOption: "))
+        if(firstOption == 2):
             break
+        if(firstOption == 1):
+            cart = crt.Cart([])
+            membershipType = int(input("\nCustomer membership\n1) Rewards member\n2) Regular member\nOption: "))
+            if membershipType < 0 or membershipType > 2:
+                print("Invalid value")
+            else:
+                membership = "rewards" if membershipType == 1 else "regular"
+                customer = ctm.Customer(membership)
+                while(True):
+                    showOptions()
+                    option = int(input("\nOption: "))
+                    if option == 1:
+                        showInventory()
+                    if option == 2:
+                        showInventory()
+                        posOption = int(input("\nChoose the 'Pos' of the item you want: "))
+                        if(posOption < 0 or posOption > len(inventory)):
+                            print("\nInvalid Value")
+                        else:
+                            itemQuantity = int(input("\nQuantity: "))
+                            if(itemQuantity <= 0 or itemQuantity > int(inventory[posOption]["quantity"])):
+                                print("\nInvalid value")
+                            else:
+                                item = it.Item(inventory[posOption]["name"], itemQuantity, float(inventory[posOption]["regularPrice"]), float(inventory[posOption]["memberPrice"]), inventory[posOption]["taxStatus"])
+                                cart.addItem(item.name, item)
+                    if option == 3:
+                        cart.show(customer.getMembership())
+                        itemNumOption = int(input("\nChoose item #: "))
+                        if itemNumOption < 1 or itemNumOption > cart.size():
+                            print("\nInvalid value")
+                        else:
+                            cart.removeItem(cart.items[itemNumOption - 1])
+                            print("\nItem removed succesfully")
+                        
+                    if option == 4:
+                        cart.emptyCart()
+                        print("Items deleted succesfully")
+                        
+                    if option == 5:
+                        cart.show(customer.getMembership())
+                        
+                    if option == 6:
+                        if len(cart.items) > 0:
+                            validCash = cart.validateCash(customer.getMembership())
+                            print(f"TOTAL BILL: {validCash}")
+                            cash = float(input("Cash $: "))
+                            if cash < validCash:
+                                print("Invalid value it must be greater than the bill")
+                            else:
+                                cheackoutData = cart.checkOut(cash, customer.getMembership())
+                                print("\n\t\tConfirm Checkout\n1) No\n2) Yes")
+                                confirmation = bool(int(input("Option: ")) - 1)
+                                updateInventory(confirmation, cheackoutData)
+                                break
+                        else:
+                            print("No items for CheckOut")
+                    if option == 7:
+                        break
+    except ValueError:
+        print("Invalid input")
             
             
             
